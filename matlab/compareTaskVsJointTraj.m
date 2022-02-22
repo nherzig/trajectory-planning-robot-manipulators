@@ -13,7 +13,7 @@ zlabel('Z [m]');
 grid on
 view([45 45]);
 % Define IK solver
-ik = inverseKinematics('RigidBodyTree',gen3);
+ik = inverseKinematics('RigidBodyTree',robot);
 ikWeights = [1 1 1 1 1 1];
 % Use a small sample time for this example, so the difference between joint
 % and task space is clear due to evaluation of IK in task space trajectory.
@@ -58,7 +58,7 @@ tic;
 
 % Solve IK for all waypoints
 numWaypoints = size(waypoints,2);
-numJoints = numel(gen3.homeConfiguration);
+numJoints = numel(robot.homeConfiguration);
 jointWaypoints = zeros(numJoints,numWaypoints);
 for idx = 1:numWaypoints
     tgtPose = trvec2tform(waypoints(:,idx)');
@@ -74,7 +74,7 @@ end
 
 % Trajectory evaluation (only needed to find end effector position)
 for idx = 1:numel(trajTimes)  
-    eeTform = getTransform(gen3,qJoint(:,idx)',eeName); 
+    eeTform = getTransform(robot,qJoint(:,idx),eeName); 
     posJoint(:,idx) = tform2trvec(eeTform)'; 
 end
 jointTime = toc;

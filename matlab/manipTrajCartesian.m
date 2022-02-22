@@ -10,13 +10,13 @@ clear, clc, close all
 createWaypointData;
 
 % Define IK
-ik = inverseKinematics('RigidBodyTree',gen3);
+ik = inverseKinematics('RigidBodyTree',robot);
 ikWeights = [1 1 1 1 1 1];
-ikInitGuess = gen3.homeConfiguration;
+ikInitGuess = robot.homeConfiguration;
 
 % Set up plot
 plotMode = 1; % 0 = None, 1 = Trajectory, 2 = Coordinate Frames
-show(gen3,jointAnglesHome','Frames','off','PreservePlot',false);
+show(robot,jointAnglesHome','Frames','off','PreservePlot',false);
 xlim([-1 1]), ylim([-1 1]), zlim([0 1.2])
 hold on
 if plotMode == 1
@@ -68,7 +68,7 @@ for idx = 1:numel(trajTimes)
     ikInitGuess = config;
 
     % Show the robot
-    show(gen3,config,'Frames','off','PreservePlot',false);
+    show(robot,config,'Frames','off','PreservePlot',false);
     title(['Trajectory at t = ' num2str(trajTimes(idx))])
     drawnow    
 end

@@ -7,13 +7,13 @@
 
 %% Common parameters
 % Rigid Body Tree information
-robot = loadrobot("abbIrb120","DataFormat","column","Gravity",[0 0 -9.81]);
+robot = loadrobot("abbIrb120T","DataFormat","column","Gravity",[0 0 -9.81]);
 
 %Positions definitions
-jointAnglesHome=robot.homeConfiguration';
-eeName = char(robot.BodyNames(end));
-basename=char(robot.BodyNames(1));
-toolPositionHome=tform2trvec(getTransform(robot,robot.homeConfiguration,eeName,basename));
+jointAnglesHome=robot.homeConfiguration'
+Initpose=getTransform(robot,robot.homeConfiguration,'tool0','base')
+toolPositionHome=Initpose()
+eeName = 'tool0';
 numJoints = numel(robot.homeConfiguration);
 ikInitGuess = robot.homeConfiguration;
 
@@ -26,9 +26,9 @@ waypoints = [0.374-0.1 0 0.63]' + ...
          
 % Euler Angles (Z Y X) relative to the home orientation       
 orientations = [0     0    0;
-                0  0    0; 
-                0    0  0;
-               0  0    0;
+                pi/8  0    0; 
+                0    pi/2  0;
+               -pi/8  0    0;
                 0     0    0]';   
             
 % Array of waypoint times

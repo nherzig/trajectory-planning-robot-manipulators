@@ -11,7 +11,7 @@ clear, clc, close all
 createWaypointData;
 
 % Define IK
-ik = inverseKinematics('RigidBodyTree',gen3);
+ik = inverseKinematics('RigidBodyTree',robot);
 ikWeights = [1 1 1 1 1 1];
 ikInitGuess = jointAnglesHome';
 ikInitGuess(ikInitGuess > pi) = ikInitGuess(ikInitGuess > pi) - 2*pi;
@@ -19,7 +19,7 @@ ikInitGuess(ikInitGuess < -pi) = ikInitGuess(ikInitGuess < -pi) + 2*pi;
 
 % Set up plot
 plotMode = 1; % 0 = None, 1 = Trajectory, 2 = Coordinate Frames
-show(gen3,gen3.homeConfiguration,'Frames','off','PreservePlot',false);
+show(robot,robot.homeConfiguration,'Frames','off','PreservePlot',false);
 xlim([-1 1]), ylim([-1 1]), zlim([0 1.2])
 hold on
 if plotMode == 1
@@ -31,7 +31,7 @@ plot3(waypoints(1,:),waypoints(2,:),waypoints(3,:),'ro','LineWidth',2);
 includeOrientation = false; % Set this to use zero vs. nonzero orientations
 
 numWaypoints = size(waypoints,2);
-numJoints = numel(gen3.homeConfiguration);
+numJoints = numel(robot.homeConfiguration);
 jointWaypoints = zeros(numJoints,numWaypoints);
 
 for idx = 1:numWaypoints
@@ -75,10 +75,10 @@ end
 %% Trajectory following loop
 for idx = 1:numel(trajTimes)  
 
-    config = q(:,idx)';
+    config = q(:,idx);
     
     % Find Cartesian points for visualization
-    eeTform = getTransform(gen3,config,eeName);
+    eeTform = getTransform(robot,config,eeName);
     if plotMode == 1
         eePos = tform2trvec(eeTform);
         set(hTraj,'xdata',[hTraj.XData eePos(1)], ...
@@ -89,7 +89,7 @@ for idx = 1:numel(trajTimes)
     end
 
     % Show the robot
-    show(gen3,config,'Frames','off','PreservePlot',false);
+    show(robot,config,'Frames','off','PreservePlot',false);
     title(['Trajectory at t = ' num2str(trajTimes(idx))])
     drawnow   
     
